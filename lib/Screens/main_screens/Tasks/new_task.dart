@@ -36,17 +36,18 @@ class _NewTaskPageState extends State<NewTaskPage> {
   void initState() {
     super.initState();
     times = List.generate(dosesPerDay, (index) => TimeOfDay(hour: 0, minute: 0));
+    _requestNotificationPermissions();
   }
 
-  Future<void> _scheduleNotifications(String taskName) async {
+  Future<void> _scheduleNotifications(String taskName, List<TimeOfDay> times) async {
     for (int i = 0; i < times.length; i++) {
       final time = times[i];
       final now = DateTime.now();
       final scheduledTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-      
+
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
-          id: i, // Unique ID for each notification
+          id: DateTime.now().millisecondsSinceEpoch.remainder(100000), // Unique ID for each notification
           channelKey: 'alarm_channel',
           title: 'Task Reminder',
           body: taskName,
@@ -65,6 +66,13 @@ class _NewTaskPageState extends State<NewTaskPage> {
           repeats: false, // Set to true if you want the notification to repeat daily
         ),
       );
+    }
+  }
+
+  Future<void> _requestNotificationPermissions() async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) {
+      await AwesomeNotifications().requestPermissionToSendNotifications();
     }
   }
 
@@ -172,7 +180,10 @@ class _NewTaskPageState extends State<NewTaskPage> {
                         'times': times.map((time) => '${time.hour}:${time.minute.toString().padLeft(2, '0')}').toList(),
                       };
                       widget.onSubmit(taskData);
-                      await _scheduleNotifications(taskData['name']);
+                      await _scheduleNotifications(taskData['name'], times);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Task added successfully!')),
+                      );
                       Navigator.pop(context);
                     }
                   },

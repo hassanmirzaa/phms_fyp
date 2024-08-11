@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -8,24 +7,24 @@ import 'package:phms_fyp/colors/colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AwarenessesScreen extends StatefulWidget {
-  const AwarenessesScreen(); // Updated class name
+  const AwarenessesScreen();
 
   @override
-  State<AwarenessesScreen> createState() => _AwarenessesScreenState(); // Updated class name
+  State<AwarenessesScreen> createState() => _AwarenessesScreenState();
 }
 
-class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated class name
-  List<Map<String, dynamic>> awarenessDetails = []; // Updated variable name
+class _AwarenessesScreenState extends State<AwarenessesScreen> {
+  List<Map<String, dynamic>> awarenessDetails = [];
 
   @override
   void initState() {
     super.initState();
-    loadAwarenessData(); // Updated method call
+    loadAwarenessData();
   }
 
-  loadAwarenessData() async { // Updated method name
+  loadAwarenessData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('awarenessDetails')) { // Updated key
+    if (prefs.containsKey('awarenessDetails')) {
       String jsonData = prefs.getString('awarenessDetails')!;
       setState(() {
         awarenessDetails = List<Map<String, dynamic>>.from(
@@ -36,16 +35,22 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
     }
   }
 
-  saveAwarenessData() async { // Updated method name
+  saveAwarenessData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String jsonData = json.encode(awarenessDetails);
-    prefs.setString('awarenessDetails', jsonData); // Updated key
+    prefs.setString('awarenessDetails', jsonData);
   }
 
-  void deleteAwareness(int index) { // Updated method name
+  void deleteAwareness(int index) {
     setState(() {
       awarenessDetails.removeAt(index);
-      saveAwarenessData(); // Updated method call
+      saveAwarenessData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Awareness Deleted!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     });
   }
 
@@ -57,11 +62,11 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
     return Scaffold(
       drawer: CustomDrawer(currentPage: 'awarenesses'),
       appBar: AppBar(
-        title: Text("Awarenesses"), // Updated title
+        title: Text("Awarenesses"),
         backgroundColor: AppColor.primaryColor,
       ),
       body: Stack(
-        children:[
+        children: [
           SingleChildScrollView(
             child: Column(
               children: [
@@ -70,7 +75,7 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
                   physics: NeverScrollableScrollPhysics(),
                   itemCount: awarenessDetails.length,
                   itemBuilder: (context, index) {
-                    final awareness = awarenessDetails[index]; // Updated variable name
+                    final awareness = awarenessDetails[index];
                     return Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Container(
@@ -83,19 +88,18 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Name: ${awareness['name']}", // Updated text
+                              Text("Name: ${awareness['name']}",
                                   style: TextStyle(
-                                      fontSize: 20, fontWeight: FontWeight.bold,color: AppColor.textWhiteColor)),
+                                      fontSize: 20, fontWeight: FontWeight.bold, color: AppColor.textWhiteColor)),
                               SizedBox(height: 8),
-                              Text("Description: ${awareness['description']}", // Updated text
-                                  style: TextStyle(fontSize: 18,color: AppColor.textWhiteColor)),
-                              
+                              Text("Description: ${awareness['description']}",
+                                  style: TextStyle(fontSize: 18, color: AppColor.textWhiteColor)),
                               SizedBox(height: 8),
                               Align(
                                 alignment: Alignment.centerRight,
                                 child: IconButton(
-                                  onPressed: () => deleteAwareness(index), // Updated function call
-                                  icon: Icon(Icons.delete,color: AppColor.textWhiteColor,),
+                                  onPressed: () => deleteAwareness(index),
+                                  icon: Icon(Icons.delete, color: AppColor.textWhiteColor),
                                 ),
                               ),
                             ],
@@ -118,11 +122,17 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NewAwarenessPage( // Updated route
+                        builder: (context) => NewAwarenessPage(
                           onSubmit: (awarenessData) {
                             setState(() {
-                              awarenessDetails.add(awarenessData); // Updated variable name
-                              saveAwarenessData(); // Updated method call
+                              awarenessDetails.add(awarenessData);
+                              saveAwarenessData();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Awareness Added!'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
                             });
                           },
                         ),
@@ -133,21 +143,20 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
                     height: Height * 0.08,
                     width: Width * 0.6,
                     decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(20),
-                                bottomRight: Radius.circular(16),
-                              ),
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(-4, 2),
-                                  blurRadius: 10,
-                                )
-                              ],
-                            ),
+                      color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(-4, 2),
+                          blurRadius: 10,
+                        ),
+                      ],
+                    ),
                     child: Center(
-                      child: Text("Add Awareness", // Updated text
-                          style: TextStyle(fontSize: 18, color: Colors.white)),
+                      child: Text("Add Awareness", style: TextStyle(fontSize: 18, color: Colors.white)),
                     ),
                   ),
                 ),
@@ -155,7 +164,7 @@ class _AwarenessesScreenState extends State<AwarenessesScreen> { // Updated clas
               ],
             ),
           ),
-        ]
+        ],
       ),
     );
   }

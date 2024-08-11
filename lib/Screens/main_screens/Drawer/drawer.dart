@@ -18,6 +18,7 @@ class CustomDrawer extends StatelessWidget {
     final Height = MediaQuery.of(context).size.height;
     final Width = MediaQuery.of(context).size.width;
     return Drawer(
+      backgroundColor: AppColor.primaryColor,
       child: Column(
         children: [
           SizedBox(

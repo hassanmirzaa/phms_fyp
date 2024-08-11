@@ -17,6 +17,7 @@ class _SignUpState extends State<SignUp> {
   final lastnameController = TextEditingController();
   final ageController = TextEditingController();
   final descriptionController = TextEditingController();
+  final diseasesController = TextEditingController();  // New controller for Diseases
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +107,7 @@ class _SignUpState extends State<SignUp> {
                               children: [
 
                                 //Gender
-                                Text(
+                                const Text(
                                   'Gender:',
                                   style: TextStyle(
                                     fontSize: 16,
@@ -260,7 +261,23 @@ class _SignUpState extends State<SignUp> {
                         keyboardType: TextInputType.name,
                         textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
-                          label: const Text('Discription'),
+                          label: const Text('Description'),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: Height * 0.02,
+                      ),
+
+                      // Diseases
+                      TextFormField(
+                        controller: diseasesController,  // New Diseases field
+                        keyboardType: TextInputType.name,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: InputDecoration(
+                          label: const Text('Diseases'),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                           ),
@@ -283,6 +300,7 @@ class _SignUpState extends State<SignUp> {
                     sp.setString("gender", dropdownValue!);
                     sp.setString("blood", bloodGroupValue!);
                     sp.setString("description", descriptionController.text);
+                    sp.setString("diseases", diseasesController.text);  // Save Diseases field value
                     sp.setBool("isLogin", true);
 
                     Navigator.pushReplacement(
@@ -340,6 +358,7 @@ class _SignUpState extends State<SignUp> {
         ageController.text.isNotEmpty &&
         dropdownValue != null &&
         bloodGroupValue != null &&
-        descriptionController.text.isNotEmpty;
+        descriptionController.text.isNotEmpty &&
+        diseasesController.text.isNotEmpty;  // Include Diseases field in validation
   }
 }

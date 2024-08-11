@@ -84,6 +84,12 @@ class _NewAwarenessPageState extends State<NewAwarenessPage> {
                         'description': awarenessDescriptionController.text.toString(),
                       };
                       widget.onSubmit(awarenessData);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Awareness Added!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                       Navigator.pop(context);
                     }
                   },
@@ -108,7 +114,7 @@ class _NewAwarenessPageState extends State<NewAwarenessPage> {
                     ),
                   ),
                 ),
-                SizedBox(height: Height * 0.04)
+                SizedBox(height: Height * 0.04),
               ],
             ),
           ),

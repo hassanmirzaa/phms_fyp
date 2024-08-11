@@ -26,6 +26,12 @@ void main() {
     ],
   );
 
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
+
   runApp(MyApp());
 }
 
@@ -38,16 +44,16 @@ class MyApp extends StatelessWidget {
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        textTheme: GoogleFonts.latoTextTheme(
+        textTheme: GoogleFonts.nunitoTextTheme(
           Theme.of(context).textTheme,
         ),
         appBarTheme: AppBarTheme(
           centerTitle: true,
           color: AppColor.primaryColor,
-          titleTextStyle: GoogleFonts.lato(
+          titleTextStyle: GoogleFonts.outfit(
             textStyle: TextStyle(
               fontSize: 20,
-              fontWeight: FontWeight.w300,
+              fontWeight: FontWeight.w600,
             ),
           ),
           foregroundColor: Colors.white,

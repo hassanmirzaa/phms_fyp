@@ -1,4 +1,3 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:phms_fyp/Screens/main_screens/Drawer/drawer.dart';
 import 'package:phms_fyp/colors/colors.dart';
@@ -12,18 +11,13 @@ class DahsboardScreen extends StatefulWidget {
 }
 
 class _DahsboardScreenState extends State<DahsboardScreen> {
-  String? name, lastName, age, gender, blood, description;
+  String? name, lastName, age, gender, blood, description, diseases;
+
   @override
   void initState() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if(!isAllowed){
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
-    // TODO: implement initState
+    
     super.initState();
     loadData();
-
   }
 
   loadData() async {
@@ -34,6 +28,7 @@ class _DahsboardScreenState extends State<DahsboardScreen> {
     gender = sp.getString('gender');
     blood = sp.getString('blood');
     description = sp.getString('description');
+    diseases = sp.getString('diseases'); // Retrieve Diseases value
     setState(() {});
   }
 
@@ -129,6 +124,20 @@ class _DahsboardScreenState extends State<DahsboardScreen> {
                     ),
                     Text(
                       description.toString(),
+                      style: TextStyle(fontSize: 25),
+                    ),
+                  ]),
+                  SizedBox(
+                    height: Height * 0.03,
+                  ),
+                  Wrap(children: [
+                    Text(
+                      "Diseases : ", // Display Diseases label
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      diseases.toString(), // Display Diseases value
                       style: TextStyle(fontSize: 25),
                     ),
                   ]),

@@ -45,6 +45,12 @@ class _TasksScreenState extends State<TasksScreen> {
     setState(() {
       taskDetails.removeAt(index);
       saveTaskData();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Task Deleted!'),
+          backgroundColor: Colors.red,
+        ),
+      );
     });
   }
 
@@ -56,125 +62,123 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       drawer: CustomDrawer(currentPage: 'tasks'),
       appBar: AppBar(
-        title: Text("Tasks"), // Updated title
+        title: Text("Tasks"),
         backgroundColor: AppColor.primaryColor,
       ),
       body: Stack(
-        children:[SingleChildScrollView(
-       //  physics: NeverScrollableScrollPhysics(),
-          child: Column(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: taskDetails.length,
-                itemBuilder: (context, index) {
-                  final task = taskDetails[index]; // Updated variable name
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: AppColor.primaryColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Name: ${task['name']}", // Updated text
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold,color: AppColor.textWhiteColor)),
-                            SizedBox(height: 8),
-                            Text("Description: ${task['description']}", // Updated text
-                                style: TextStyle(fontSize: 18,color: AppColor.textWhiteColor)),
-                            SizedBox(height: 8),
-                            Text("Doses Per Day: ${task['dosesPerDay']}", // Updated text
-                                style: TextStyle(fontSize: 18,color: AppColor.textWhiteColor)),
-                            SizedBox(height: 8),
-                            Text("Times: ", // Updated text
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold,color: AppColor.textWhiteColor)),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: (task['times'] as List<dynamic>)
-                                  .map((time) {
-                                return Text(time, style: TextStyle(fontSize: 18,color: AppColor.textWhiteColor));
-                              }).toList(),
-                            ),
-                            SizedBox(height: 8),
-                            Align(
-                              alignment: Alignment.centerRight,
-                              child: IconButton(
-                                onPressed: () => deleteTask(index), // Updated function call
-                                icon: Icon(Icons.delete,color: AppColor.textWhiteColor,),
-                              ),
-                            ),
-                          ],
+        children: [
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: taskDetails.length,
+                  itemBuilder: (context, index) {
+                    final task = taskDetails[index];
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: AppColor.primaryColor,
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-              SizedBox(height: Height * 0.13),
-            ],
-          ),
-        ),
-           Center(
-               child: Column(mainAxisAlignment: MainAxisAlignment.end,
-                 children: [
-                   GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => NewTaskPage( // Updated route
-                            onSubmit: (taskData) {
-                              setState(() {
-                                taskDetails.add(taskData); // Updated variable name
-                                saveTaskData();
-                              });
-                            },
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Name: ${task['name']}",
+                                  style: TextStyle(
+                                      fontSize: 20, fontWeight: FontWeight.bold, color: AppColor.textWhiteColor)),
+                              SizedBox(height: 8),
+                              Text("Description: ${task['description']}",
+                                  style: TextStyle(fontSize: 18, color: AppColor.textWhiteColor)),
+                              SizedBox(height: 8),
+                              Text("Doses Per Day: ${task['dosesPerDay']}",
+                                  style: TextStyle(fontSize: 18, color: AppColor.textWhiteColor)),
+                              SizedBox(height: 8),
+                              Text("Times: ",
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColor.textWhiteColor)),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: (task['times'] as List<dynamic>)
+                                    .map((time) {
+                                  return Text(time, style: TextStyle(fontSize: 18, color: AppColor.textWhiteColor));
+                                }).toList(),
+                              ),
+                              SizedBox(height: 8),
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: IconButton(
+                                  onPressed: () => deleteTask(index),
+                                  icon: Icon(Icons.delete, color: AppColor.textWhiteColor),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      height: Height * 0.08,
-                      width: Width * 0.6,
-                      decoration: BoxDecoration(
-                                color: Colors.red,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  bottomRight: Radius.circular(16),
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    offset: Offset(-4, 2),
-                                    blurRadius: 10,
-                                  )
-                                ],
-                              ),
-                      child: Center(
-                        child: Text("Add Task", // Updated text
-                            style: TextStyle(fontSize: 18, color: Colors.white)),
                       ),
+                    );
+                  },
+                ),
+                SizedBox(height: Height * 0.13),
+              ],
+            ),
+          ),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => NewTaskPage(
+                          onSubmit: (taskData) {
+                            setState(() {
+                              taskDetails.add(taskData);
+                              saveTaskData();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Task Added!'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            });
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    height: Height * 0.08,
+                    width: Width * 0.6,
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          offset: Offset(-4, 2),
+                          blurRadius: 10,
+                        ),
+                      ],
                     ),
-                               ),
-                               SizedBox(height: Height * 0.05),
-                 ],
-               ),
-             ),
-             
-            
-            ] 
-            
-           
-          
+                    child: Center(
+                      child: Text("Add Task", style: TextStyle(fontSize: 18, color: Colors.white)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: Height * 0.05),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
 }
-
-

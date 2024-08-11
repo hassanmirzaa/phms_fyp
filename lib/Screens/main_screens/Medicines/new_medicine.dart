@@ -36,15 +36,12 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
   void initState() {
     super.initState();
     times = List.generate(dosesPerDay, (index) => TimeOfDay(hour: 0, minute: 0));
+    _requestNotificationPermissions();
   }
 
   Future<void> _scheduleNotifications(String medicationName) async {
     for (int i = 0; i < times.length; i++) {
       final time = times[i];
-      final now = DateTime.now();
-      final scheduledTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-      
-
       await AwesomeNotifications().createNotification(
         content: NotificationContent(
           id: i, // Unique ID for each notification
@@ -56,16 +53,20 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
           autoDismissible: false, // Ensures user interaction is required
         ),
         schedule: NotificationCalendar(
-          year: scheduledTime.year,
-          month: scheduledTime.month,
-          day: scheduledTime.day,
-          hour: scheduledTime.hour,
-          minute: scheduledTime.minute,
+          hour: time.hour,
+          minute: time.minute,
           second: 0,
           millisecond: 0,
-          repeats: false, // Set to true if you want the notification to repeat daily
+          repeats: true, // Set to true to repeat daily
         ),
       );
+    }
+  }
+
+  Future<void> _requestNotificationPermissions() async {
+    bool isAllowed = await AwesomeNotifications().isNotificationAllowed();
+    if (!isAllowed) {
+      await AwesomeNotifications().requestPermissionToSendNotifications();
     }
   }
 
@@ -174,6 +175,12 @@ class _NewMedicinePageState extends State<NewMedicinePage> {
                       };
                       widget.onSubmit(medicationData);
                       await _scheduleNotifications(medicationData['name']);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Medicine Added!'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
                       Navigator.pop(context);
                     }
                   },
